@@ -1,7 +1,6 @@
 import text_ru
 import view
 import model
-import os
 
 FILE_PATH = 'Telephone_directory.json'
 
