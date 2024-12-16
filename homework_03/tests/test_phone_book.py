@@ -1,19 +1,8 @@
 import pytest
 from unittest.mock import patch, mock_open
-from model import PhoneBook, Contact, FileManager
+from homework_03.model import Contact, FileManager
 import json
 import view
-
-
-@pytest.fixture
-def phone_book():
-    """Данные для создания экземпляра PhoneBook с тестовыми данными."""
-    pb = PhoneBook("test_contacts.json")
-    pb.contacts = [
-        {'id': 1, 'name': 'Алиса', 'phone': '1234567890', 'comment': 'Подруга'},
-        {'id': 2, 'name': 'Дима', 'phone': '0987654321', 'comment': 'Коллега'}
-    ]
-    return pb
 
 
 @pytest.mark.parametrize("name, phone, comment, expected_count", [
