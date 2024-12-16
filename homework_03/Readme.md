@@ -13,7 +13,7 @@
 ### Шаг 1: Склонируйте репозиторий
 Клонируйте проект в локальную директорию:
 ```bash
-git clone https://github.com/LelikCom/OTUS/tree/master/homework_03
+git clone https://github.com/LelikCom/OTUS/
 cd OTUS/homework_03
 ```
 
@@ -100,6 +100,7 @@ homework_03/
 ### Запуск тестов
 Для проверки работоспособности функций выполните:
 ```bash
+export PYTHONPATH=".."
 pytest tests/
 ```
 
