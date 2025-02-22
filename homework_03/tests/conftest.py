@@ -1,5 +1,5 @@
 import pytest
-from model import PhoneBook
+from homework_03.model import PhoneBook
 
 
 @pytest.fixture

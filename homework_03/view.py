@@ -1,4 +1,4 @@
-import text_ru
+from homework_03 import text_ru
 from typing import Optional
 
 

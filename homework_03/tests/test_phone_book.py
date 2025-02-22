@@ -1,9 +1,13 @@
 import pytest
 from unittest.mock import patch, mock_open
-from homework_03.model import Contact, FileManager
-import json
-import view
+from ..model import Contact, FileManager
 
+import json
+from ..view import user_delete_contact
+import sys
+
+
+print(sys.path)
 
 @pytest.mark.parametrize("name, phone, comment, expected_count", [
     ("Олег", "1122334455", "Друг", 3),
@@ -66,7 +70,7 @@ def test_delete_contact_parametrized(phone_book, contact_id, expected_messages, 
     with patch("builtins.print") as mock_print:
         contact_to_delete = phone_book.delete_contact(contact_id)
 
-        view.user_delete_contact(contact_to_delete)
+        user_delete_contact(contact_to_delete)
 
         for message in expected_messages:
             print(f"Ожидаемое сообщение: {message}")
@@ -180,3 +184,7 @@ def test_edit_contact_parametrized(phone_book, contact_id, new_data, expected_ou
             assert updated_contact == expected_contact
         else:
             assert contact_to_edit is None
+
+#
+# if __name__ == "__main__":
+#     pytest.main(['-vv'])

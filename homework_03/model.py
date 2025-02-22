@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional
 import os
 import json
-import text_ru
+from homework_03 import text_ru
 
 
 def validate_user_input(user_date: str, len_menu: int) -> bool:
