@@ -14,7 +14,7 @@ main_menu_items = [
     "Изменить контакт",
     "Удалить контакт",
     "Сохранить файл",
-    "Выход"
+    "Выход",
 ]
 
 
@@ -69,6 +69,7 @@ def msg_contact_create(name: str, phone: str, comment: str) -> str:
 
 
 # text_ru.py
+
 
 def json_decode_error(file_path: str) -> str:
     return f"Ошибка: файл '{file_path}' содержит некорректный JSON."

@@ -5,7 +5,7 @@ from typing import Optional
 def show_main_menu():
     """Показать меню"""
     for i, row in enumerate(text_ru.main_menu_items):
-        print(f'\t{i}. {row}' if i else row)
+        print(f"\t{i}. {row}" if i else row)
 
 
 def user_input(msg: str) -> str:
@@ -39,7 +39,7 @@ def user_input_search() -> str:
 
 
 def user_input_id() -> Optional[int]:
-    """ Запрашивает у пользователя данные для поиска контакта и возвращает ID как целое число или None."""
+    """Запрашивает у пользователя данные для поиска контакта и возвращает ID как целое число или None."""
     is_running = True
     while is_running:
         contact_id_input = input(text_ru.id_choose).strip()
@@ -56,14 +56,19 @@ def user_refactor_contact(contact_to_edit: dict) -> None:
     if not contact_to_edit:
         print("")
         return
-    contact_to_edit['name'] = (
-        input(text_ru.msg_contact_input(text_ru.FIELD_NAME, contact_to_edit['name'])) or contact_to_edit['name']
+    contact_to_edit["name"] = (
+        input(text_ru.msg_contact_input(text_ru.FIELD_NAME, contact_to_edit["name"]))
+        or contact_to_edit["name"]
     )
-    contact_to_edit['phone'] = (
-        input(text_ru.msg_contact_input(text_ru.FIELD_PHONE, contact_to_edit['phone'])) or contact_to_edit['phone']
+    contact_to_edit["phone"] = (
+        input(text_ru.msg_contact_input(text_ru.FIELD_PHONE, contact_to_edit["phone"]))
+        or contact_to_edit["phone"]
     )
-    contact_to_edit['comment'] = (
-        input(text_ru.msg_contact_input(text_ru.FIELD_COMMENT, contact_to_edit['comment'])) or contact_to_edit['comment']
+    contact_to_edit["comment"] = (
+        input(
+            text_ru.msg_contact_input(text_ru.FIELD_COMMENT, contact_to_edit["comment"])
+        )
+        or contact_to_edit["comment"]
     )
     print(text_ru.msg_contact_changed(contact_to_edit))
 
@@ -75,4 +80,3 @@ def user_delete_contact(contact: dict) -> None:
         print(text_ru.success_deleted)
     else:
         print("")
-

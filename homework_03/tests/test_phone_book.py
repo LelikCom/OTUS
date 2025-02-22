@@ -9,43 +9,54 @@ import sys
 
 print(sys.path)
 
-@pytest.mark.parametrize("name, phone, comment, expected_count", [
-    ("Олег", "1122334455", "Друг", 3),
-    ("", "", "", 3),
-    ("Олег", "", "", 3),
-    ("", "1122334455", "", 3),
-])
+
+@pytest.mark.parametrize(
+    "name, phone, comment, expected_count",
+    [
+        ("Олег", "1122334455", "Друг", 3),
+        ("", "", "", 3),
+        ("Олег", "", "", 3),
+        ("", "1122334455", "", 3),
+    ],
+)
 def test_create_contact_parametrized(phone_book, name, phone, comment, expected_count):
     """Тестируем создание контактов с разными входными данными."""
     contact = Contact(phone_book)
     contact.create_contact(name=name, phone=phone, comment=comment)
 
     assert len(phone_book.contacts) == expected_count
-    assert phone_book.contacts[-1]['name'] == name
-    assert phone_book.contacts[-1]['phone'] == phone
-    assert phone_book.contacts[-1]['comment'] == comment
+    assert phone_book.contacts[-1]["name"] == name
+    assert phone_book.contacts[-1]["phone"] == phone
+    assert phone_book.contacts[-1]["comment"] == comment
 
 
 @pytest.mark.parametrize(
     "search_query, expected_prints",
     [
-        ("Алиса", [
-            "Найдены следующие контакты:",
-            "ID: 1 | Имя: Алиса | Телефон: 1234567890 | Комментарий: Подруга"
-        ]),
-        ("Дима", [
-            "Найдены следующие контакты:",
-            "ID: 2 | Имя: Дима | Телефон: 0987654321 | Комментарий: Коллега"
-        ]),
-        ("", [
-            "Найдены следующие контакты:",
-            "ID: 1 | Имя: Алиса | Телефон: 1234567890 | Комментарий: Подруга\n"
-            "ID: 2 | Имя: Дима | Телефон: 0987654321 | Комментарий: Коллега"
-        ]),
-        ("Кнопка", [
-            "Контакты не найдены"
-        ])
-    ]
+        (
+            "Алиса",
+            [
+                "Найдены следующие контакты:",
+                "ID: 1 | Имя: Алиса | Телефон: 1234567890 | Комментарий: Подруга",
+            ],
+        ),
+        (
+            "Дима",
+            [
+                "Найдены следующие контакты:",
+                "ID: 2 | Имя: Дима | Телефон: 0987654321 | Комментарий: Коллега",
+            ],
+        ),
+        (
+            "",
+            [
+                "Найдены следующие контакты:",
+                "ID: 1 | Имя: Алиса | Телефон: 1234567890 | Комментарий: Подруга\n"
+                "ID: 2 | Имя: Дима | Телефон: 0987654321 | Комментарий: Коллега",
+            ],
+        ),
+        ("Кнопка", ["Контакты не найдены"]),
+    ],
 )
 def test_find_contact_parametrized(phone_book, search_query, expected_prints):
     """Параметризованный тест для find_contact."""
@@ -56,16 +67,23 @@ def test_find_contact_parametrized(phone_book, search_query, expected_prints):
             mock_print.assert_any_call(message)
 
 
-@pytest.mark.parametrize("contact_id, expected_messages, expected_count", [
-    (1, [
-        "ID: 1 | Имя: Алиса | Телефон: 1234567890 | Комментарий: Подруга",
-        "Успешно удален!"
-    ], 1),
-    (99, [
-        "Контакт с указанным ID не найден."
-    ], 2),
-])
-def test_delete_contact_parametrized(phone_book, contact_id, expected_messages, expected_count):
+@pytest.mark.parametrize(
+    "contact_id, expected_messages, expected_count",
+    [
+        (
+            1,
+            [
+                "ID: 1 | Имя: Алиса | Телефон: 1234567890 | Комментарий: Подруга",
+                "Успешно удален!",
+            ],
+            1,
+        ),
+        (99, ["Контакт с указанным ID не найден."], 2),
+    ],
+)
+def test_delete_contact_parametrized(
+    phone_book, contact_id, expected_messages, expected_count
+):
     """Тестируем удаление контактов с разными ID."""
     with patch("builtins.print") as mock_print:
         contact_to_delete = phone_book.delete_contact(contact_id)
@@ -83,23 +101,24 @@ def test_delete_contact_parametrized(phone_book, contact_id, expected_messages, 
 def test_open_file():
     """Тестируем открытие файла с контактами через FileManager."""
     test_data = [
-        {'id': 1, 'name': 'Алиса', 'phone': '1234567890', 'comment': 'Подруга'},
-        {'id': 2, 'name': 'Дима', 'phone': '0987654321', 'comment': 'Коллега'}
+        {"id": 1, "name": "Алиса", "phone": "1234567890", "comment": "Подруга"},
+        {"id": 2, "name": "Дима", "phone": "0987654321", "comment": "Коллега"},
     ]
     file_manager = FileManager("test_contacts.json")
-    with patch("builtins.open", mock_open(read_data=json.dumps(test_data))), \
-         patch("os.path.exists", return_value=True):
+    with patch("builtins.open", mock_open(read_data=json.dumps(test_data))), patch(
+        "os.path.exists", return_value=True
+    ):
         contacts = file_manager.open_file()
     assert len(contacts) == 2
-    assert contacts[0]['name'] == 'Алиса'
-    assert contacts[1]['phone'] == '0987654321'
+    assert contacts[0]["name"] == "Алиса"
+    assert contacts[1]["phone"] == "0987654321"
 
 
 def test_save_contacts():
     """Тестируем сохранение контактов через FileManager."""
     test_data = [
-        {'id': 1, 'name': 'Алиса', 'phone': '1234567890', 'comment': 'Подруга'},
-        {'id': 2, 'name': 'Дима', 'phone': '0987654321', 'comment': 'Коллега'}
+        {"id": 1, "name": "Алиса", "phone": "1234567890", "comment": "Подруга"},
+        {"id": 2, "name": "Дима", "phone": "0987654321", "comment": "Коллега"},
     ]
 
     file_manager = FileManager("test_contacts.json")
@@ -115,7 +134,7 @@ def test_save_contacts():
 def test_save_contacts_with_error():
     """Тестируем поведение при ошибке сохранения контактов."""
     test_data = [
-        {'id': 1, 'name': 'Алиса', 'phone': '1234567890', 'comment': 'Подруга'}
+        {"id": 1, "name": "Алиса", "phone": "1234567890", "comment": "Подруга"}
     ]
 
     file_manager = FileManager("test_contacts.json")
@@ -140,32 +159,34 @@ def test_get_next_id(phone_book):
 def test_find_contact(phone_book):
     """Тестируем нахождение контакта по поисковому запросу."""
     with patch("builtins.print") as mock_print:
-        phone_book.find_contact('Дима')
-        mock_print.assert_called_with("ID: 2 | Имя: Дима | Телефон: 0987654321 | Комментарий: Коллега")
+        phone_book.find_contact("Дима")
+        mock_print.assert_called_with(
+            "ID: 2 | Имя: Дима | Телефон: 0987654321 | Комментарий: Коллега"
+        )
 
 
 def test_find_contact_not_found(phone_book):
     """Тестируем ситуацию, когда контакт не найден."""
     with patch("builtins.print") as mock_print:
-        phone_book.find_contact('Кнопка')
+        phone_book.find_contact("Кнопка")
         mock_print.assert_called_with("Контакты не найдены")
 
 
-@pytest.mark.parametrize("contact_id, new_data, expected_output, expected_contact", [
-    (
-        1,
-        {'name': 'Иван', 'phone': '5555555555', 'comment': 'Друг'},
-        ["Контакт найден: ID 1"],
-        {'id': 1, 'name': 'Иван', 'phone': '5555555555', 'comment': 'Друг'}
-    ),
-    (
-        99,
-        None,
-        ["Контакт с указанным ID не найден."],
-        None
-    )
-])
-def test_edit_contact_parametrized(phone_book, contact_id, new_data, expected_output, expected_contact):
+@pytest.mark.parametrize(
+    "contact_id, new_data, expected_output, expected_contact",
+    [
+        (
+            1,
+            {"name": "Иван", "phone": "5555555555", "comment": "Друг"},
+            ["Контакт найден: ID 1"],
+            {"id": 1, "name": "Иван", "phone": "5555555555", "comment": "Друг"},
+        ),
+        (99, None, ["Контакт с указанным ID не найден."], None),
+    ],
+)
+def test_edit_contact_parametrized(
+    phone_book, contact_id, new_data, expected_output, expected_contact
+):
     """Тестируем редактирование контактов с разными ID и новыми данными."""
     with patch("builtins.print") as mock_print:
         contact_to_edit = phone_book.edit_contact(contact_id)
@@ -176,14 +197,17 @@ def test_edit_contact_parametrized(phone_book, contact_id, new_data, expected_ou
         if contact_to_edit:
             contact_to_edit.update(new_data)
 
-            assert contact_to_edit['name'] == new_data['name']
-            assert contact_to_edit['phone'] == new_data['phone']
-            assert contact_to_edit['comment'] == new_data['comment']
+            assert contact_to_edit["name"] == new_data["name"]
+            assert contact_to_edit["phone"] == new_data["phone"]
+            assert contact_to_edit["comment"] == new_data["comment"]
 
-            updated_contact = next(c for c in phone_book.contacts if c['id'] == contact_id)
+            updated_contact = next(
+                c for c in phone_book.contacts if c["id"] == contact_id
+            )
             assert updated_contact == expected_contact
         else:
             assert contact_to_edit is None
+
 
 #
 # if __name__ == "__main__":
