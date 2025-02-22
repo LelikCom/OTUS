@@ -17,26 +17,6 @@ cd OTUS
 cd homework_06
 ```
 
-### 🔹 2. Запуск без Docker (локально)
-#### **1. Создать виртуальное окружение и установить зависимости**
-```bash
-# Для Windows
-python -m venv venv
-venv\Scripts\activate
-
-# Для Linux/macOS
-python -m venv venv
-source venv/bin/activate
-
-pip install -r requirements.txt
-```
-
-#### **2. Запустить сервер**
-```bash
-uvicorn app:app --host 0.0.0.0 --port 8000
-```
-После запуска сервер будет доступен по адресу: **http://localhost:8000/ping/**
-
 ---
 ## 🚀 Запуск в Docker
 
