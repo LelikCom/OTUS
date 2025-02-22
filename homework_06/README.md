@@ -13,6 +13,7 @@
 ### 🔹 1. Клонирование репозитория
 ```bash
 git clone https://github.com/LelikCom/OTUS
+cd OTUS
 cd homework_06
 ```
 
