@@ -1,0 +1,94 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .post-card {
+            transition: transform 0.3s;
+        }
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="text-primary mb-4">Blog Posts</h1>
+
+        <div class="row g-4">
+            {% for post, user in posts %}
+            <div class="col-md-6">
+                <div class="card post-card shadow h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ post.title }}</h3>
+                        <p class="card-text text-muted">{{ post.body }}</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <img src="https://i.pravatar.cc/40?img={{ user.id }}"
+                                 class="author-avatar rounded-circle me-2">
+                            <span class="fw-bold">{{ user.name }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Floating Action Button -->
+        <button class="btn btn-primary rounded-circle p-3 fs-4 position-fixed"
+                style="bottom: 2rem; right: 2rem"
+                data-bs-toggle="modal"
+                data-bs-target="#postModal">
+            +
+        </button>
+
+        <!-- Flash message if the author is not found -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-warning mt-3">
+                    {% for category, message in messages %}
+                        {{ message | safe }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="postModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/add">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Content</label>
+                            <textarea name="body" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Author Name</label>
+                            <input type="text" name="author_name" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Publish</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
