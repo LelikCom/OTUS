@@ -42,7 +42,7 @@ docker-compose up --build
 ### 4. Откройте в браузере
 
 ```
-http://localhost:5000
+http://localhost
 ```
 
 ---
