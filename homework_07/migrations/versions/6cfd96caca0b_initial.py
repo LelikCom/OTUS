@@ -31,7 +31,6 @@ def upgrade() -> None:
                     sa.UniqueConstraint('username')
                     )
 
-    # Явно создаем sequence перед созданием таблицы posts
     op.execute(sa.schema.CreateSequence(sa.Sequence('posts_id_seq')))
 
     op.create_table('posts',
