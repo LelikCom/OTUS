@@ -2,6 +2,7 @@
 Основной модуль: создает таблицы, загружает данные и сохраняет их в базу.
 """
 
+from sqlalchemy import text
 import asyncio
 from models import Base, engine, Session, User, Post
 from jsonplaceholder_requests import fetch_users_data, fetch_posts_data
@@ -62,6 +63,7 @@ async def async_main() -> None:
     - создать таблицы
     - загрузить пользователей и посты
     - сохранить данные в БД
+    - обновить sequence
     """
     await create_tables()
 
@@ -72,6 +74,10 @@ async def async_main() -> None:
     async with Session() as session:
         await insert_users(session, users_data)
         await insert_posts(session, posts_data)
+
+        # Обновляем sequence, чтобы избежать конфликта ID
+        await session.execute(text("SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts))"))
+        await session.commit()
 
 
 def main() -> None:

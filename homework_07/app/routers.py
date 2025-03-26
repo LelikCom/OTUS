@@ -1,58 +1,95 @@
+"""
+Маршруты Flask-приложения.
+
+Этот модуль определяет следующие маршруты:
+    - Главная страница (index): отображение всех постов с данными об авторах.
+    - Добавление поста (add_post): создание нового поста, если автор найден.
+    - Форма создания нового автора (create_author, GET): отображение формы для ввода данных нового автора.
+    - Обработка создания нового автора (create_author_post, POST): сохранение нового автора в базе данных.
+"""
+
 from flask import render_template, request, redirect, url_for, flash
 from app import app, db
 from app.models import Post, User
 
-# Главная страница для отображения всех постов
-@app.route('/')
+
+@app.route("/")
 def index():
-    # Извлекаем все посты и связываем с пользователями через user_id
+    """
+    Главная страница.
+
+    Извлекает все посты и соответствующих пользователей из базы данных,
+    а затем рендерит шаблон 'index.html'.
+
+    Returns:
+        Отрендеренный HTML-шаблон главной страницы.
+    """
     posts = db.session.query(Post, User).join(User, Post.user_id == User.id).all()
+    return render_template("index.html", posts=posts)
 
-    # Передаем посты в шаблон
-    return render_template('index.html', posts=posts)
 
-# Маршрут для добавления поста
-@app.route('/add', methods=['POST'])
+@app.route("/add", methods=["POST"])
 def add_post():
-    # Получаем данные из формы
-    title = request.form.get('title')
-    body = request.form.get('body')
-    author_name = request.form.get('author_name')  # имя и фамилия автора из формы
+    """
+    Добавление нового поста.
 
-    # Проверяем, существует ли автор в базе данных
+    Принимает данные из формы (заголовок, тело, имя автора) и пытается найти автора в базе.
+    Если автор найден, создает и сохраняет новый пост.
+    Если автора нет, перенаправляет на форму создания нового автора.
+
+    Returns:
+        Перенаправление на главную страницу или на форму создания автора.
+    """
+    title = request.form.get("title")
+    body = request.form.get("body")
+    author_name = request.form.get("author_name")
+
     user = db.session.query(User).filter(User.name == author_name).first()
 
     if user:
-        # Если автор найден, создаем пост с данным автором
         new_post = Post(title=title, body=body, user_id=user.id)
         db.session.add(new_post)
         db.session.commit()
-        flash('Пост успешно добавлен!', 'success')
-        return redirect(url_for('index'))  # Перенаправляем на главную страницу
+        flash("Пост успешно добавлен!", "success")
+        return redirect(url_for("index"))
     else:
-        # Если автора нет, предлагаем создать нового пользователя
-        flash(f'Автор с именем "{author_name}" не найден. <a href="{{ url_for("create_author") }}">Создать нового автора?</a>', 'danger')
-        return redirect(url_for('index'))  # Перенаправляем обратно на главную страницу, с flash-сообщением
+        flash(f'Автор "{author_name}" не найден. Пожалуйста, добавьте его.', "warning")
+        return redirect(url_for("create_author", name=author_name))
 
-# Маршрут для создания нового автора
-@app.route('/create_author', methods=['GET', 'POST'])
+
+@app.route("/create_author")
 def create_author():
-    if request.method == 'POST':
-        # Получаем данные для создания нового пользователя
-        author_name = request.form.get('author_name')
-        email = request.form.get('email')
+    """
+    Форма создания нового автора.
 
-        # Проверяем, существует ли уже такой пользователь
-        existing_user = db.session.query(User).filter(User.name == author_name).first()
-        if existing_user:
-            flash(f'Автор с именем "{author_name}" уже существует!', 'danger')
-            return redirect(url_for('create_author'))  # Если автор существует, возвращаем на создание нового
+    Извлекает имя из параметров URL (если передано) и рендерит шаблон 'create_author.html'
+    для ввода данных нового автора.
 
-        # Если пользователя нет, создаем нового
-        new_user = User(name=author_name, email=email)
-        db.session.add(new_user)
-        db.session.commit()
+    Returns:
+        Отрендеренный HTML-шаблон формы создания автора.
+    """
+    name = request.args.get("name", "")
+    return render_template("create_author.html", name=name)
 
-        flash(f'Новый пользователь {author_name} успешно создан!', 'success')
-        return redirect(url_for('add_post'))  # Перенаправление на страницу добавления поста
-    return render_template('create_author.html')  # Шаблон для создания автора
+
+@app.route("/create_author", methods=["POST"])
+def create_author_post():
+    """
+    Обработка формы создания нового автора.
+
+    Принимает данные из формы (имя, username, email), создает нового пользователя и сохраняет его.
+    После успешного сохранения перенаправляет на главную страницу.
+
+    Returns:
+        Перенаправление на главную страницу.
+    """
+    name = request.form.get("name")
+    username = request.form.get("username")
+    email = request.form.get("email")
+
+    new_user = User(name=name, username=username, email=email)
+    db.session.add(new_user)
+    db.session.commit()
+
+    flash(f'Автор "{name}" успешно добавлен!', "success")
+    return redirect(url_for("index"))

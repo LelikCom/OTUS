@@ -11,8 +11,5 @@ RUN pip install -r requirements.txt
 # Копируем весь проект в контейнер
 COPY . .
 
-# Настройка порта для Flask
-EXPOSE 8000
-
-# Команда для запуска приложения через gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
+# Устанавливаем рабочую директорию и выполняем миграции, затем запускаем приложение
+CMD bash -c "flask db upgrade && python db_filling/main.py && gunicorn -b 0.0.0.0:8000 app:app"

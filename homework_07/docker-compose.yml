@@ -10,8 +10,10 @@ services:
     environment:
       - FLASK_ENV=production
       - DATABASE_URL=postgresql://Lelik:89068874019@db:5432/appdb
-    command: gunicorn -b 0.0.0.0:8000 app:app
+    command: bash -c "flask db stamp head || true && python db_filling/main.py && gunicorn -b 0.0.0.0:8000 app:app"
 
+
+  # Сервис базы данных
   db:
     image: postgres:13
     environment:
@@ -23,6 +25,7 @@ services:
     ports:
       - "5432:5432"
 
+  # Сервис для Nginx
   nginx:
     image: nginx:latest
     volumes:
