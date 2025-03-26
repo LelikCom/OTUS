@@ -9,11 +9,9 @@
 ### 1. Клонируйте репозиторий:
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
-cd your-repo/homework_07
+git clone https://github.com/LelikCom/OTUS/
+cd OTUS/homework_07
 ```
-
-> 🔁 Замените ссылку на актуальную, если используете другой репозиторий.
 
 ---
 
